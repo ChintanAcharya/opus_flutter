@@ -12,8 +12,8 @@ RUN apt-get update \
 	automake \
 	libtool \
 	gcc \
-	make \
-	mingw-w64
+    gcc-x86-64-linux-gnu \
+	make
 
 # Clone opus
 WORKDIR /app
@@ -25,10 +25,12 @@ RUN ./autogen.sh \
 	&& ./configure --host=arm-apple-darwin --disable-extra-programs --disable-doc --enable-shared \
 	&& make \
 	&& mv ./.libs/libopus.0.dylib /app/libopus_arm.dylib.blob \
-	&& make clean \
+	&& make clean
 
-RUN ./configure --host=x86_64-apple-darwin --disable-extra-programs --disable-doc --enable-shared \
+RUN ./autogen.sh \
+    && ./configure --host=x86_64-apple-darwin --disable-extra-programs --disable-doc --enable-shared \
 	&& make \
 	&& mv ./.libs/libopus.0.dylib /app/libopus_x86_64.dylib.blob \
 	&& make clean
+
 WORKDIR /app
